@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const bcrypt = require("bcrypt");
 const userSchema = new mongoose.Schema({
 	name: {
 		type: String,
@@ -25,5 +25,13 @@ const userSchema = new mongoose.Schema({
 	},
 });
 
+userSchema.pre("save", async function (next) {
+	const salt = await bcrypt.genSalt(10);
+	this.password = await bcrypt.hash(this.password, salt);
+	next();
+});
+
 const user = mongoose.model("User", userSchema);
 module.exports = user;
+
+// Elias Kibret
