@@ -4,9 +4,7 @@ const connectDB = (url) => {
 		url,
 		{
 			useNewUrlParser: true,
-			userCreateIndex: true,
-			useFindAndModify: false,
-			useUnifeidToplopy: true,
+			useUnifiedTopology: true,
 		},
 		() => {
 			console.log("Connected DB");
