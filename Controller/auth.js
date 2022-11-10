@@ -14,8 +14,8 @@ const register = async (req, res) => {
 	// 	throw new BadRequestError("Please provide password");
 	// }
 
-	const salt = await bcrypt.genSalt(10);
-	req.body.password = await bcrypt.hash(req.body.password, salt);
+	// const salt = await bcrypt.genSalt(10);
+	// req.body.password = await bcrypt.hash(req.body.password, salt);
 	const newUser = await new userModel(req.body).save();
 
 	res.status(200).json({ ...newUser._doc });
