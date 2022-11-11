@@ -1,6 +1,6 @@
 const job = require("../Model/job");
 const jobModel = require("../Model/job");
-const { NotFoundError } = require("../errors/index");
+const { NotFoundError, BadRequestError } = require("../errors/index");
 const getAllJobs = async (req, res) => {
 	const jobs = await jobModel
 		.find({ createdBy: req.user._doc._id })
@@ -30,7 +30,20 @@ const createJobs = async (req, res) => {
 	res.status(200).json(newJob);
 };
 const updateJobs = async (req, res) => {
-	res.send("update job");
+	const {
+		body: { company, position },
+		user: { _id: userId },
+		params: { id: jobId },
+	} = req;
+	if (company === "" && position === "") {
+		throw new BadRequestError("Please provide what you want to update");
+	} else {
+		const job = await jobModel.findByIdAndUpdate(
+			{ _id: jobId, createdBy: userId },
+			{ $set: req.body },
+			{ new: true, runValidators: true }
+		);
+	}
 };
 const deleteJobs = async (req, res) => {
 	res.send("delete job");
