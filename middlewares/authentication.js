@@ -14,11 +14,12 @@ const validate = async (req, res, next) => {
 		const token = authHeader.split(" ")[1];
 
 		try {
-			const payload = jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+			jwt.verify(token, process.env.JWT_SECRET, async (err, user) => {
 				if (err) {
 					throw new UnauthenticatedError("InValid Token");
 				} else {
-					console.log(req.user);
+					req.user = await userModel.findById(user.userId).select("-password");
+					console.log(req.user._doc);
 					next();
 				}
 			});
