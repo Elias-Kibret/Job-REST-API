@@ -3,6 +3,7 @@
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema(
 	{
@@ -51,8 +52,6 @@ const userSchema = new mongoose.Schema(
 		},
 	}
 );
-
-// ** 👨‍💻  ELIAS KIBRET
 
 userSchema.pre("save", async function (next) {
 	const salt = await bcrypt.genSalt(10);

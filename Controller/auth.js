@@ -2,7 +2,6 @@ const userModel = require("../Model/user");
 const { StatusCode } = require("http-status-codes");
 const { BadRequestError, UnauthenticatedError } = require("../errors");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
 
 const register = async (req, res) => {
 	const newUser = await new userModel(req.body).save();
@@ -20,7 +19,8 @@ const login = async (req, res) => {
 		if (!user) {
 			throw new UnauthenticatedError("Invalid Credentials");
 		} else {
-			if (await user.comparePassword(user.password)) {
+			if (await user.comparePassword(password)) {
+				console.log("hello");
 				const token = user.createJWT();
 				res.status(200).json({ name: { name: user.getName() }, token });
 			}
