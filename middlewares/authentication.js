@@ -16,6 +16,7 @@ const validate = async (req, res, next) => {
 					throw new UnauthenticatedError("InValid Token");
 				} else {
 					req.user = user;
+					next();
 				}
 			});
 		} catch (error) {
@@ -23,3 +24,5 @@ const validate = async (req, res, next) => {
 		}
 	}
 };
+
+module.exports = validate;
