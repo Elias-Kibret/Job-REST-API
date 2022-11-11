@@ -5,6 +5,8 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const bcrypt = require("bcrypt");
 
+//** Mongoose middleware
+
 const userSchema = new mongoose.Schema(
 	{
 		name: {
@@ -58,6 +60,7 @@ userSchema.pre("save", async function (next) {
 	this.password = await bcrypt.hash(this.password, salt);
 	next();
 });
+//ELIAS KIBRET
 
 userSchema.methods.getName = function () {
 	return this.name;

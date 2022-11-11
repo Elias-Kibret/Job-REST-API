@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 const { UnauthenticatedError } = require("../errors");
 
 const validate = async (req, res, next) => {
-	//check header
 	const authHeader = req.headers.token;
 
 	if (!authHeader || !authHeader.startsWith("Bearer")) {
@@ -19,7 +18,7 @@ const validate = async (req, res, next) => {
 					throw new UnauthenticatedError("InValid Token");
 				} else {
 					req.user = await userModel.findById(user.userId).select("-password");
-					console.log(req.user._doc);
+
 					next();
 				}
 			});
@@ -28,5 +27,6 @@ const validate = async (req, res, next) => {
 		}
 	}
 };
+// ? ELIAS KIBRET
 
 module.exports = validate;
