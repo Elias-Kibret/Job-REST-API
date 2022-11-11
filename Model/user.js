@@ -43,8 +43,10 @@ const userSchema = new mongoose.Schema(
 					}
 				);
 			},
-			getName() {
-				return this.name;
+
+			comparePassword(canditatePassword) {
+				const isMatch = bcrypt.compare(canditatePassword, this.password);
+				return isMatch;
 			},
 		},
 	}

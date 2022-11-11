@@ -16,15 +16,17 @@ const login = async (req, res) => {
 		throw new BadRequestError("Please provde email and passwored");
 	} else {
 		const user = await userModel.findOne({ email });
-		if (!user) {
-			throw new UnauthenticatedError("Invalid Credentials");
-		} else {
-			const token = user.createJWT();
-			res.status(200).json({ name: { name: user.getName() }, token });
+		if (await user.comparePassword(user.password)) {
+			if (!user) {
+				throw new UnauthenticatedError("Invalid Credentials");
+			} else {
+				const token = user.createJWT();
+				res.status(200).json({ name: { name: user.getName() }, token });
+			}
 		}
 	}
 };
-
+// ? ELIAS KIBRET
 module.exports = {
 	register,
 	login,
