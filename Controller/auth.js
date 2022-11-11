@@ -1,27 +1,28 @@
 const userModel = require("../Model/user");
 const { StatusCode } = require("http-status-codes");
-const { BadRequestError } = require("../errors");
+const { BadRequestError, UnauthenticatedError } = require("../errors");
+const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+
 const register = async (req, res) => {
-	const { name, email, password } = req.body;
-	// if (!name) {
-	// 	throw new BadRequestError("please Provide name");
-	// }
-	// if (!email) {
-	// 	throw new BadRequestError("Please provide email");
-	// }
-	// if (!password) {
-	// 	throw new BadRequestError("Please provide password");
-	// }
-
-	// const salt = await bcrypt.genSalt(10);
-	// req.body.password = await bcrypt.hash(req.body.password, salt);
 	const newUser = await new userModel(req.body).save();
-
-	res.status(200).json({ ...newUser._doc });
+	const token = newUser.createJWT();
+	res.status(200).json({ name: { name: newUser.getName() }, token });
 };
+
 const login = async (req, res) => {
-	res.send("login user");
+	const { email, password } = req.body;
+	if (!email || !password) {
+		throw new BadRequestError("Please provde email and passwored");
+	} else {
+		const user = await userModel.findOne({ email });
+		if (!user) {
+			throw new UnauthenticatedError("Invalid Credentials");
+		} else {
+			const token = user.createJWT();
+			res.status(200).json({ name: { name: user.getName() }, token });
+		}
+	}
 };
 
 module.exports = {
