@@ -2,6 +2,7 @@ require("dotenv").config();
 require("express-async-errors");
 const express = require("express");
 const connectDB = require("./db/connect");
+const validate = require("./middlewares/authentication");
 const app = express();
 
 //Routes
@@ -13,7 +14,7 @@ const jobRoute = require("./Routes/job");
 // Middlewares
 app.use(express.json());
 app.use("/api/v1/auth", authRoute);
-app.use("/api/v1/job", jobRoute);
+app.use("/api/v1/job", validate, jobRoute);
 
 const PORT = process.env.PORT || 5000;
 
