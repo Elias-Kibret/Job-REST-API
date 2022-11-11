@@ -16,10 +16,11 @@ const login = async (req, res) => {
 		throw new BadRequestError("Please provde email and passwored");
 	} else {
 		const user = await userModel.findOne({ email });
-		if (await user.comparePassword(user.password)) {
-			if (!user) {
-				throw new UnauthenticatedError("Invalid Credentials");
-			} else {
+
+		if (!user) {
+			throw new UnauthenticatedError("Invalid Credentials");
+		} else {
+			if (await user.comparePassword(user.password)) {
 				const token = user.createJWT();
 				res.status(200).json({ name: { name: user.getName() }, token });
 			}
